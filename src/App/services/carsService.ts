@@ -1,18 +1,23 @@
 import { TCar } from '../types/types';
 
-const BASE_URL = 'http://127.0.0.1:3000';
+enum Responses {
+  BASE_URL = 'http://127.0.0.1:3000',
+  TotalCountHeader = 'X-Total-Count',
+}
 
-async function getGarage() {
-  const res = await fetch(`${BASE_URL}/garage`);
+async function getGarage(page: number) {
+  const res = await fetch(`${Responses.BASE_URL}/garage?_page=${page}&_limit=7`);
   const data = await res.json();
 
-  const totalCars = res.headers.get('X-Total-Count') ? res.headers.get('X-Total-Count') : data.length;
+  const totalCars = res.headers.get(Responses.TotalCountHeader)
+    ? res.headers.get(Responses.TotalCountHeader)
+    : data.length;
   console.log(data);
   return { data, totalCars: +totalCars };
 }
 
-async function crateNewCar(carData: TCar) {
-  const res = await fetch(`${BASE_URL}/garage`, {
+async function createNewCar(carData: TCar) {
+  const res = await fetch(`${Responses.BASE_URL}/garage`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -24,7 +29,7 @@ async function crateNewCar(carData: TCar) {
 }
 
 async function updateCar(carData: TCar) {
-  const res = await fetch(`${BASE_URL}/garage/${carData.id}`, {
+  const res = await fetch(`${Responses.BASE_URL}/garage/${carData.id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -35,4 +40,12 @@ async function updateCar(carData: TCar) {
   return car;
 }
 
-export { getGarage, crateNewCar, updateCar };
+async function deleteCar(id: TCar['id']) {
+  const res = await fetch(`${Responses.BASE_URL}/garage/${id}`, {
+    method: 'DELETE',
+  });
+  const car = await res.json();
+  return car;
+}
+
+export { getGarage, createNewCar, updateCar, deleteCar };
