@@ -1,9 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { createNewCar, deleteCar, getGarage, updateCar } from '../services/carsService';
-import { TCar } from '../types/types';
+import {
+  createNewCar,
+  deleteCar,
+  driveCar,
+  getGarage,
+  switchCarEngineStatus,
+  updateCar,
+} from '../services/carsService';
+import { TCar, engineStatus } from '../types/types';
 import CarForm from '../components/CarInput/CarInput';
 import CarsList from '../components/CarsList/CarsList';
 import Pagination from '../components/Pagination/Pagination';
+import generateCar from '../utils/generateCar';
 
 enum Constants {
   startLength = 0,
@@ -18,6 +26,7 @@ const initialData = {
 
 function HomePage() {
   const [cars, setCars] = useState<TCar[]>([]);
+  const [enginesStatus, setEnginesStatus] = useState<engineStatus>({});
 
   const [carsLength, setCarsLength] = useState(Constants.startLength);
   const [isLoading, setIsLoading] = useState(true);
@@ -31,10 +40,7 @@ function HomePage() {
     const { data, totalCars } = await getGarage(currentPage);
     setCars(data);
     setCarsLength(totalCars);
-
-    console.log('lel', data.length);
     if (data.length === 0) setCurrentpage((prev) => (prev - 1 ? prev - 1 : 1));
-
     setIsLoading(false);
   };
 
@@ -42,11 +48,60 @@ function HomePage() {
     getData();
   }, [currentPage]);
 
-  console.log(carsLength, currentPage);
-  const createRandomColor = () => {
-    const hex = Math.random().toString(16).slice(2, 8);
-    return `#${hex}`;
+  const toDrive = async (id: number) => {
+    const status = await driveCar(id, 'drive');
+    setEnginesStatus((prev) => ({
+      ...prev,
+      [id]: {
+        status: 'drive',
+        velocity: prev[id].velocity,
+        distance: prev[id].distance,
+      },
+    }));
+
+    console.log(status);
+    switch (status) {
+      case 200:
+        setEnginesStatus((prev) => ({
+          ...prev,
+          [id]: {
+            status: 'finished',
+            velocity: prev[id].velocity,
+            distance: prev[id].distance,
+          },
+        }));
+        break;
+      case 500:
+        setEnginesStatus((prev) => ({
+          ...prev,
+          [id]: {
+            status: 'broken',
+            velocity: prev[id].velocity,
+            distance: prev[id].distance,
+          },
+        }));
+        break;
+
+      default:
+        console.log(status);
+        break;
+    }
   };
+
+  const engineSwitcher = async (id: number, status: 'started' | 'stopped') => {
+    const engine = await switchCarEngineStatus(id, status);
+    setEnginesStatus((prev) => ({
+      ...prev,
+      [id]: {
+        status,
+        velocity: engine.velocity,
+        distance: engine.distance,
+      },
+    }));
+
+    if (status === 'started') await toDrive(id);
+  };
+
   const handleChange = (target: { name: string; value: string }) => {
     setCreateCarData((prev) => ({
       ...prev,
@@ -97,11 +152,17 @@ function HomePage() {
 
   const handleGenerate = () => {
     for (let i = 0; i < 4; i += 1) {
-      createNewCar({ color: createRandomColor(), name: 'kekw' });
+      createNewCar(generateCar());
     }
     getData();
   };
+  const handleRace = () => {
+    for (let i = 1; i <= Constants.pageSize; i += 1) {
+      engineSwitcher(i + Constants.pageSize * (currentPage - 1), 'started');
+    }
+  };
 
+  console.log(enginesStatus);
   if (!isLoading) {
     return (
       <>
@@ -126,6 +187,9 @@ function HomePage() {
         <button type="button" onClick={handleGenerate}>
           GENERATE 100 cars
         </button>
+        <button type="button" onClick={handleRace}>
+          race
+        </button>
         {cars.length ? (
           <div>
             Garage: {carsLength}
@@ -135,7 +199,14 @@ function HomePage() {
               onPageChange={handlePageChange}
               pageSize={itemsOnPage}
             />
-            <CarsList cars={cars} handleClick={handleClick} onDelete={handleDelete} />
+            <CarsList
+              cars={cars}
+              enginesData={enginesStatus}
+              handleClick={handleClick}
+              onDelete={handleDelete}
+              onStart={engineSwitcher}
+              onStopped={engineSwitcher}
+            />
           </div>
         ) : (
           <h1>OOPS, it`&apos;s empty</h1>

@@ -4,8 +4,38 @@ type TCar = {
   id?: number;
 };
 
-type kekw = {
-  name: string;
+type engineStatus = {
+  [id: number]: {
+    status: string;
+    velocity: number;
+    distance: number;
+  };
 };
 
-export type { TCar, kekw };
+enum CarNames {
+  Tesla,
+  BMW,
+  Jigyli,
+  Lamborghini,
+  Opel,
+  Ford,
+  Ferrari,
+  OKA,
+  Bugatti,
+  Honda,
+}
+
+enum CarModels {
+  Model_X,
+  Model_S,
+  Cayene,
+  Cybertruck,
+  Aventador,
+  Mustang,
+  Model_E,
+  Rapid,
+  Sedan,
+  Octavia,
+}
+export { CarNames, CarModels };
+export type { TCar, engineStatus };

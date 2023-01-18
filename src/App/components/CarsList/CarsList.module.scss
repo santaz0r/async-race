@@ -1,3 +1,22 @@
-.logo {
-  transition: transform 5s linear;
+@keyframes drive {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(90vw);
+  }
+}
+
+.car_drive {
+  animation: drive linear;
+  animation-fill-mode: forwards;
+}
+
+.car_broken {
+  animation: drive linear;
+  animation-play-state: paused;
+}
+
+.car_stopped {
+  animation-play-state: unset;
 }

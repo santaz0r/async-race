@@ -5,8 +5,13 @@ enum Responses {
   TotalCountHeader = 'X-Total-Count',
 }
 
+enum EPaths {
+  garage = 'garage',
+  engine = 'engine',
+}
+
 async function getGarage(page: number) {
-  const res = await fetch(`${Responses.BASE_URL}/garage?_page=${page}&_limit=7`);
+  const res = await fetch(`${Responses.BASE_URL}/${EPaths.garage}?_page=${page}&_limit=7`);
   const data = await res.json();
 
   const totalCars = res.headers.get(Responses.TotalCountHeader)
@@ -17,7 +22,7 @@ async function getGarage(page: number) {
 }
 
 async function createNewCar(carData: TCar) {
-  const res = await fetch(`${Responses.BASE_URL}/garage`, {
+  const res = await fetch(`${Responses.BASE_URL}/${EPaths.garage}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -29,7 +34,7 @@ async function createNewCar(carData: TCar) {
 }
 
 async function updateCar(carData: TCar) {
-  const res = await fetch(`${Responses.BASE_URL}/garage/${carData.id}`, {
+  const res = await fetch(`${Responses.BASE_URL}/${EPaths.garage}/${carData.id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -41,11 +46,30 @@ async function updateCar(carData: TCar) {
 }
 
 async function deleteCar(id: TCar['id']) {
-  const res = await fetch(`${Responses.BASE_URL}/garage/${id}`, {
+  const res = await fetch(`${Responses.BASE_URL}/${EPaths.garage}/${id}`, {
     method: 'DELETE',
   });
   const car = await res.json();
   return car;
 }
 
-export { getGarage, createNewCar, updateCar, deleteCar };
+// engine
+
+async function switchCarEngineStatus(id: number, status: 'started' | 'stopped') {
+  const res = await fetch(`${Responses.BASE_URL}/${EPaths.engine}?id=${id}&status=${status}`, {
+    method: 'PATCH',
+  });
+  const data = await res.json();
+  console.log(data);
+  return data;
+}
+
+async function driveCar(id: number, status: 'drive') {
+  const res = await fetch(`${Responses.BASE_URL}/${EPaths.engine}?id=${id}&status=${status}`, {
+    method: 'PATCH',
+  });
+
+  return res.status;
+}
+
+export { getGarage, createNewCar, updateCar, deleteCar, switchCarEngineStatus, driveCar };

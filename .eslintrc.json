@@ -32,12 +32,14 @@
     "object-curly-newline": "off",
     "no-shadow": "off",
     "@typescript-eslint/no-shadow": ["error"],
-    // "implicit-arrow-linebreak": "off",
+    "indent": "off",
+    "no-nested-ternary": "off",
+    "implicit-arrow-linebreak": "off",
     "react/jsx-one-expression-per-line": "off"
     // "import/prefer-default-export": "off",
     // "linebreak-style": "off",
     // "operator-linebreak": "off",
-    // "no-nested-ternary": "off",
+
     // "function-paren-newline": "off",
     // "react/jsx-props-no-spreading": "off",
     // "no-return-assign": "off",
