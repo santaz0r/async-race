@@ -35,10 +35,12 @@
     "indent": "off",
     "no-nested-ternary": "off",
     "implicit-arrow-linebreak": "off",
-    "react/jsx-one-expression-per-line": "off"
+    "no-undef": "off",
+    "react/jsx-one-expression-per-line": "off",
+
     // "import/prefer-default-export": "off",
     // "linebreak-style": "off",
-    // "operator-linebreak": "off",
+    "operator-linebreak": "off"
 
     // "function-paren-newline": "off",
     // "react/jsx-props-no-spreading": "off",

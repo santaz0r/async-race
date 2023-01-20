@@ -4,6 +4,12 @@ type TCar = {
   id?: number;
 };
 
+type TRespWinner = {
+  id: number;
+  wins: number;
+  time: number;
+};
+
 type engineStatus = {
   [id: number]: {
     status: string;
@@ -38,4 +44,4 @@ enum CarModels {
   Octavia,
 }
 export { CarNames, CarModels };
-export type { TCar, engineStatus };
+export type { TCar, engineStatus, TRespWinner };

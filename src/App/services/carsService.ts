@@ -10,14 +10,13 @@ enum EPaths {
   engine = 'engine',
 }
 
-async function getGarage(page: number) {
-  const res = await fetch(`${Responses.BASE_URL}/${EPaths.garage}?_page=${page}&_limit=7`);
+async function getGarage(page = 0, limit = 99999999999999) {
+  const res = await fetch(`${Responses.BASE_URL}/${EPaths.garage}?_page=${page}&_limit=${limit}`);
   const data = await res.json();
 
   const totalCars = res.headers.get(Responses.TotalCountHeader)
     ? res.headers.get(Responses.TotalCountHeader)
     : data.length;
-  console.log(data);
   return { data, totalCars: +totalCars };
 }
 

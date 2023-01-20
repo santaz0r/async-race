@@ -5,11 +5,11 @@ type TProps = {
   itemsCount: number;
   onPageChange: (page: number) => void;
   currentPage: number;
+  disabled: boolean;
 };
 
-function Pagination({ pageSize, itemsCount, onPageChange, currentPage }: TProps) {
+function Pagination({ pageSize, itemsCount, onPageChange, currentPage, disabled }: TProps) {
   const pageCount = Math.ceil(itemsCount / pageSize);
-  //   if (pageCount === 1) return null;
   const pages = new Array(pageCount).fill(1).map((i: number, index) => {
     const el = i;
     return el + index;
@@ -21,6 +21,7 @@ function Pagination({ pageSize, itemsCount, onPageChange, currentPage }: TProps)
         {pages.map((page) => (
           <li key={`page_${page}`}>
             <button
+              disabled={disabled}
               type="button"
               className={`${styles.pagination_btn} ${page === currentPage ? styles.bgBlue : ''}`}
               onClick={() => onPageChange(page)}
