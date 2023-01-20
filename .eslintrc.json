@@ -30,12 +30,18 @@
     "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/no-unused-vars": "warn",
     "object-curly-newline": "off",
-    // "implicit-arrow-linebreak": "off",
-    "react/jsx-one-expression-per-line": "off"
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": ["error"],
+    "indent": "off",
+    "no-nested-ternary": "off",
+    "implicit-arrow-linebreak": "off",
+    "no-undef": "off",
+    "react/jsx-one-expression-per-line": "off",
+
     // "import/prefer-default-export": "off",
     // "linebreak-style": "off",
-    // "operator-linebreak": "off",
-    // "no-nested-ternary": "off",
+    "operator-linebreak": "off"
+
     // "function-paren-newline": "off",
     // "react/jsx-props-no-spreading": "off",
     // "no-return-assign": "off",
