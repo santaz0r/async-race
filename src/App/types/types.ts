@@ -43,5 +43,13 @@ enum CarModels {
   Sedan,
   Octavia,
 }
-export { CarNames, CarModels };
+
+enum Constants {
+  startLength = 0,
+  startPage = 1,
+  pageSize = 7,
+  limitToGenerate = 100,
+  winnersLimit = 10,
+}
+export { CarNames, CarModels, Constants };
 export type { TCar, engineStatus, TRespWinner };

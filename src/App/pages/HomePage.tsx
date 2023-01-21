@@ -7,7 +7,7 @@ import {
   switchCarEngineStatus,
   updateCar,
 } from '../services/carsService';
-import { TCar, TRespWinner, engineStatus } from '../types/types';
+import { Constants, TCar, TRespWinner, engineStatus } from '../types/types';
 import CarForm from '../components/CarInput/CarInput';
 import CarsList from '../components/CarsList/CarsList';
 import Pagination from '../components/Pagination/Pagination';
@@ -15,14 +15,8 @@ import generateCar from '../utils/generateCar';
 import styles from './HomePage.module.scss';
 import { createWinner, deleteWinner, getWinner, getWinners, updateWinner } from '../services/winners.service';
 import WinnersTable from '../components/WinnersTable/WinnersTable';
+import WinnerModal from '../components/WinnerModal/WinnerModal';
 
-enum Constants {
-  startLength = 0,
-  startPage = 1,
-  pageSize = 7,
-  limitToGenerate = 100,
-  winnersLimit = 10,
-}
 const initialData = {
   name: '',
   color: '#000000',
@@ -46,6 +40,7 @@ function HomePage() {
   const [createCarData, setCreateCarData] = useState(initialData);
   const [updateCarData, setUpdateCarData] = useState(initialData);
   const [disabledInput, setDisabledInput] = useState(true);
+  const [champion, setChampion] = useState<{ name: string; time: number } | null>(null);
   const [hasWinner, setHasWinner] = useState(false);
   const [sortOption, setSortOption] = useState({ sort: '', order: '' });
 
@@ -214,6 +209,7 @@ function HomePage() {
 
   const handleRecet = async () => {
     setIsResetActive(true);
+    setChampion(null);
     await Promise.all(cars.map((i) => engineSwitcher(i.id!, 'stopped')));
     setHasWinner(false);
     setIsRace(false);
@@ -241,20 +237,25 @@ function HomePage() {
       id,
       time: +(enginesStatus[id].distance / 1000 / enginesStatus[id].velocity).toFixed(2),
     };
-    console.log(winnerData);
+
     const data = await getWinner(id);
+
     if (Object.keys(data).length) {
       const newData: TRespWinner = {
         id,
         wins: data.wins + 1,
         time: winnerData.time < data.time ? winnerData.time : data.time,
       };
+
       await updateWinner(newData);
     } else {
       await createWinner({ ...winnerData, wins: 1 });
     }
-
+    const champ = cars.find((car) => car.id === winnerData.id);
+    console.log(champ);
+    if (champ) setChampion({ name: champ.name, time: winnerData.time });
     getWinnersData();
+    getAllCars();
   };
   Object.keys(enginesStatus).map((id) => {
     if (enginesStatus[+id].status === 'finished' && !hasWinner && isRace) {
@@ -262,8 +263,8 @@ function HomePage() {
     }
     return null;
   });
-  const handleSort = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    const sort = e.currentTarget.textContent?.toLocaleLowerCase() as string;
+  const handleSort = (e: string) => {
+    const sort = e;
     if (sort === 'wins' || sort === 'time') {
       setSortOption((prev) => ({ sort, order: prev.order === 'ASC' && prev.sort === sort ? 'DESC' : 'ASC' }));
     }
@@ -280,8 +281,6 @@ function HomePage() {
       ? Object.keys(enginesStatus).some((id) => enginesStatus[+id].status !== 'stopped')
       : false;
 
-  console.log(sortOption);
-  console.log(enginesStatus);
   if (!isLoading && !isWinnerLoading && !isAllCarsLoading) {
     return (
       <>
@@ -299,7 +298,7 @@ function HomePage() {
             </li>
           </ul>
         </nav>
-        <div className={!isHome ? styles.hidden : ''}>
+        <div className={!isHome ? styles.hidden : ''} style={{ position: 'relative' }}>
           <CarForm
             isRace={isRace}
             description="Create new car"
@@ -333,7 +332,7 @@ function HomePage() {
             <div>
               Garage: {carsLength}
               <Pagination
-                disabled={isSingleDriving()}
+                disabled={isRace || isSingleDriving()}
                 currentPage={currentPage}
                 itemsCount={carsLength}
                 onPageChange={handlePageChange}
@@ -349,24 +348,24 @@ function HomePage() {
                 isDriving={isKekwing}
                 isRace={isRace}
               />
+              {hasWinner && <WinnerModal data={champion} />}
             </div>
           ) : (
             <h1>OOPS, it`&apos;s empty</h1>
           )}
         </div>
-        <div className={isHome ? styles.hidden : ''}>
+        <div className={`${styles.winners} ${isHome ? styles.hidden : ''}`}>
           <h2>Winners</h2>
           {winners.length ? (
             <>
-              <WinnersTable winners={winners} findOption={findWinnerCar} onSort={handleSort} />
-              {/* {winners.map((i) => (
-                <div key={i.id} style={{ display: 'flex', justifyContent: 'space-around' }}>
-                  <p>{findWinnerCar('color', i.id)}</p>
-                  <p>{findWinnerCar('name', i.id)}</p>
-                  <p>{i.wins}</p>
-                  <p>{i.time}</p>
-                </div>
-              ))} */}
+              <WinnersTable
+                winners={winners}
+                findOption={findWinnerCar}
+                onSort={handleSort}
+                sortOprions={sortOption}
+                currentPage={currentWinnersPage}
+              />
+
               <Pagination
                 disabled={false}
                 currentPage={currentWinnersPage}

@@ -2,3 +2,10 @@
   height: 0;
   overflow: hidden;
 }
+
+.winners {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
