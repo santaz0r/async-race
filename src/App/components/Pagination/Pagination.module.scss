@@ -1,6 +1,7 @@
 .pagination {
   display: flex;
   list-style-type: none;
+
   li {
     margin-right: 10px;
     &:last-child {
@@ -30,4 +31,10 @@
   color: white;
   background: rgb(82, 111, 251);
   border: solid 1px rgb(82, 111, 251);
+}
+
+.bgBlue:disabled {
+  color: white;
+  background: gray;
+  border: solid 1px gray;
 }
