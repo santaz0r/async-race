@@ -1,3 +1,4 @@
+import ResetBtn from '../ResetBtn/ResetBtn';
 import styles from './WinnerModal.module.scss';
 
 type TPorps = {
@@ -5,10 +6,11 @@ type TPorps = {
     name: string;
     time: number;
   } | null;
+  isResetActive: boolean;
+  onReset: () => Promise<void>;
 };
 
-function WinnerModal({ data }: TPorps) {
-  console.log(data);
+function WinnerModal({ data, isResetActive, onReset }: TPorps) {
   if (data?.name) {
     return (
       <div className={styles.winner}>
@@ -18,6 +20,7 @@ function WinnerModal({ data }: TPorps) {
             {data.name} with time {data.time}s
           </p>
         </div>
+        <ResetBtn isResetActive={isResetActive} onReset={onReset} />
         <p className={styles.descr}>*please press the &apos;reset&apos; button after the race is over</p>
       </div>
     );
