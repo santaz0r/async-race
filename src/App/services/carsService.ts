@@ -59,7 +59,6 @@ async function switchCarEngineStatus(id: number, status: 'started' | 'stopped') 
     method: 'PATCH',
   });
   const data = await res.json();
-  console.log(data);
   return data;
 }
 

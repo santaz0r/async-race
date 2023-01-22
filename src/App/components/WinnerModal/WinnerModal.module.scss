@@ -1,6 +1,21 @@
 .winner {
   position: absolute;
+  width: 20vw;
+  height: 15vh;
   left: 50%;
-  top: 50%;
+  top: 30%;
   transform: translate(-50%, -50%);
+  background-color: #fff;
+  text-align: center;
+  border-radius: 20px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.descr {
+  opacity: 0.5;
+  font-size: 12px;
 }

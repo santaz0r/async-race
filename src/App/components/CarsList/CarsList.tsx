@@ -25,33 +25,30 @@ function CarsList({ cars, enginesData, handleClick, onDelete, onStart, onStopped
   return (
     <div>
       {cars.map((car) => (
-        <div key={car.id} style={{ border: '1px solid black', marginBottom: '15px' }}>
-          <div className="buttons">
-            <button disabled={isRace || isDriving(car.id!)} type="button" onClick={() => handleClick(car)}>
-              Select
-            </button>
-            <button disabled={isRace || isDriving(car.id!)} type="button" onClick={() => onDelete(car.id as number)}>
-              REMOVE
-            </button>
+        <div key={car.id} className={styles.car_item}>
+          <div className={styles.car_name}>
+            <h3>{car.name}</h3>
           </div>
-          <p>{car.name}</p>
-          <div className="engine_buttons">
+          <div className={styles.car_controls}>
             <button
+              className={styles.car_controls_btn}
               disabled={isRace || isDriving(car.id!)}
               type="button"
-              onClick={() => onStart(car.id as number, 'started')}
+              onClick={() => handleClick(car)}
             >
-              start
+              Edit
             </button>
             <button
-              disabled={isRace || !isDriving(car.id!)}
+              className={styles.car_controls_btn}
+              disabled={isRace || isDriving(car.id!)}
               type="button"
-              onClick={() => onStopped(car.id as number, 'stopped')}
+              onClick={() => onDelete(car.id as number)}
             >
-              stopped
+              Delete
             </button>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingRight: '7vw' }}>
+
+          <div className={styles.car_track}>
             <CarLogo
               className={enginesData[car.id!] ? `${addClass(car.id!)}` : ''}
               style={
@@ -63,7 +60,26 @@ function CarsList({ cars, enginesData, handleClick, onDelete, onStart, onStopped
               width="75px"
               height="75px"
             />
-            <FinishFlag style={{ right: '7vw' }} width="50px" height="50px" />
+            <FinishFlag className={styles.car_finish} width="50px" height="50px" />
+          </div>
+
+          <div className={styles.engine_constrols}>
+            <button
+              className={styles.engine_constrols_btn}
+              disabled={isRace || isDriving(car.id!)}
+              type="button"
+              onClick={() => onStart(car.id as number, 'started')}
+            >
+              start
+            </button>
+            <button
+              className={styles.engine_constrols_btn}
+              disabled={isRace || !isDriving(car.id!)}
+              type="button"
+              onClick={() => onStopped(car.id as number, 'stopped')}
+            >
+              stop
+            </button>
           </div>
         </div>
       ))}

@@ -1,0 +1,55 @@
+.car {
+  $height: 35px;
+  $radius: 5px;
+  $border: 1px solid black;
+
+  &_form {
+    display: flex;
+    align-items: center;
+    padding: 5px 0;
+  }
+  &_text_field {
+    border-radius: $radius;
+    outline: none;
+    border: $border;
+    width: 260px;
+    height: $height;
+    margin-right: 10px;
+    font-size: 16px;
+  }
+  &_color_field {
+    border-radius: $radius;
+    outline: none;
+    border: $border;
+    height: $height;
+    margin-right: 10px;
+
+    transition: all 0.1s linear;
+    &:not([disabled]) {
+      background-color: #fff;
+    }
+    &:not([disabled]):hover {
+      background-color: greenyellow;
+      border-color: greenyellow;
+      cursor: pointer;
+    }
+  }
+  &_submit_btn {
+    width: 200px;
+    height: $height;
+    border-radius: $radius;
+    border: $border;
+    font-size: 16px;
+    transition: all 0.1s linear;
+    &:not([disabled]) {
+      background-color: #fff;
+    }
+
+    &:not([disabled]):hover {
+      background-color: greenyellow;
+      color: white;
+      border-color: greenyellow;
+      cursor: pointer;
+    }
+  }
+}

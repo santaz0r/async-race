@@ -42,7 +42,7 @@ function HomePage() {
   const [disabledInput, setDisabledInput] = useState(true);
   const [champion, setChampion] = useState<{ name: string; time: number } | null>(null);
   const [hasWinner, setHasWinner] = useState(false);
-  const [sortOption, setSortOption] = useState({ sort: '', order: '' });
+  const [sortOption, setSortOption] = useState({ sort: 'time', order: 'ASC' });
 
   const [isRace, setIsRace] = useState(false);
   const [isResetActive, setIsResetActive] = useState(false);
@@ -195,7 +195,7 @@ function HomePage() {
   };
 
   const handleGenerate = () => {
-    for (let i = 0; i < 4; i += 1) {
+    for (let i = 0; i < Constants.limitToGenerate; i += 1) {
       createNewCar(generateCar());
     }
     getData();
@@ -232,7 +232,6 @@ function HomePage() {
       .join('');
 
   const getChampion = async (id: number) => {
-    setHasWinner(true);
     const winnerData = {
       id,
       time: +(enginesStatus[id].distance / 1000 / enginesStatus[id].velocity).toFixed(2),
@@ -260,6 +259,7 @@ function HomePage() {
   Object.keys(enginesStatus).map((id) => {
     if (enginesStatus[+id].status === 'finished' && !hasWinner && isRace) {
       getChampion(+id);
+      setHasWinner(true);
     }
     return null;
   });
@@ -269,7 +269,7 @@ function HomePage() {
       setSortOption((prev) => ({ sort, order: prev.order === 'ASC' && prev.sort === sort ? 'DESC' : 'ASC' }));
     }
   };
-  const isKekwing = (id: number) =>
+  const isDriving = (id: number) =>
     enginesStatus[id]
       ? enginesStatus[id].status === 'started' ||
         enginesStatus[id].status === 'broken' ||
@@ -284,15 +284,15 @@ function HomePage() {
   if (!isLoading && !isWinnerLoading && !isAllCarsLoading) {
     return (
       <>
-        <nav>
-          <ul>
+        <nav className={styles.nav}>
+          <ul className={styles.list}>
             <li>
-              <button onClick={switchPageToHome} type="button">
+              <button disabled={isHome} className={styles.nav_btn} onClick={switchPageToHome} type="button">
                 home
               </button>
             </li>
             <li>
-              <button onClick={switchPageToWinners} type="button">
+              <button disabled={!isHome} className={styles.nav_btn} onClick={switchPageToWinners} type="button">
                 winners
               </button>
             </li>
@@ -319,13 +319,13 @@ function HomePage() {
             onChange={handleUpdateChange}
             disabledInput={disabledInput}
           />
-          <button disabled={isRace} type="button" onClick={handleGenerate}>
-            GENERATE 100 cars
+          <button className={styles.control_btns} disabled={isRace} type="button" onClick={handleGenerate}>
+            generate 100 cars
           </button>
-          <button disabled={isSingleDriving()} type="button" onClick={handleRace}>
+          <button className={styles.control_btns} disabled={isSingleDriving()} type="button" onClick={handleRace}>
             race
           </button>
-          <button disabled={isResetActive} type="button" onClick={handleRecet}>
+          <button className={styles.control_btns} disabled={isResetActive} type="button" onClick={handleRecet}>
             recet
           </button>
           {cars.length ? (
@@ -345,14 +345,14 @@ function HomePage() {
                 onDelete={handleDelete}
                 onStart={engineSwitcher}
                 onStopped={engineSwitcher}
-                isDriving={isKekwing}
+                isDriving={isDriving}
                 isRace={isRace}
               />
-              {hasWinner && <WinnerModal data={champion} />}
             </div>
           ) : (
             <h1>OOPS, it`&apos;s empty</h1>
           )}
+          {hasWinner && <WinnerModal data={champion} />}
         </div>
         <div className={`${styles.winners} ${isHome ? styles.hidden : ''}`}>
           <h2>Winners</h2>
@@ -375,7 +375,7 @@ function HomePage() {
               />
             </>
           ) : (
-            <h3>its empty</h3>
+            <h3>no winners</h3>
           )}
         </div>
       </>
