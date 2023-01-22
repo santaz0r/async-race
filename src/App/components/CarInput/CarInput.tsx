@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './CarInput.module.scss';
 
 type TProps = {
   placeholder: string;
@@ -16,16 +17,24 @@ function CarForm({ placeholder, description, name, color, onAction, onChange, di
     onChange({ name: currentTarget.name, value: currentTarget.value });
   };
   return (
-    <form onSubmit={onAction}>
+    <form className={styles.car_form} onSubmit={onAction}>
       <input
+        className={styles.car_text_field}
         disabled={disabledInput || isRace}
         placeholder={placeholder}
         value={name}
         name="name"
         onChange={handleChange}
       />
-      <input disabled={disabledInput || isRace} type="color" value={color} name="color" onChange={handleChange} />
-      <button disabled={disabledInput || isRace} type="submit">
+      <input
+        className={styles.car_color_field}
+        disabled={disabledInput || isRace}
+        type="color"
+        value={color}
+        name="color"
+        onChange={handleChange}
+      />
+      <button className={styles.car_submit_btn} disabled={disabledInput || isRace} type="submit">
         {description}
       </button>
     </form>
