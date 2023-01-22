@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import {
   createNewCar,
   deleteCar,
@@ -21,6 +21,7 @@ const initialData = {
   name: '',
   color: '#000000',
 };
+const MemoWinner = memo(WinnerModal);
 
 function HomePage() {
   const [AllCars, setAllCars] = useState<TCar[]>([]);
@@ -352,7 +353,7 @@ function HomePage() {
           ) : (
             <h1>OOPS, it`&apos;s empty</h1>
           )}
-          {hasWinner && <WinnerModal data={champion} />}
+          {hasWinner && <MemoWinner data={champion} />}
         </div>
         <div className={`${styles.winners} ${isHome ? styles.hidden : ''}`}>
           <h2>Winners</h2>
