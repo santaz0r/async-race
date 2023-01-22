@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo } from 'react';
+import React, { useState, useEffect, memo, useCallback } from 'react';
 import {
   createNewCar,
   deleteCar,
@@ -16,6 +16,7 @@ import styles from './HomePage.module.scss';
 import { createWinner, deleteWinner, getWinner, getWinners, updateWinner } from '../services/winners.service';
 import WinnersTable from '../components/WinnersTable/WinnersTable';
 import WinnerModal from '../components/WinnerModal/WinnerModal';
+import ResetBtn from '../components/ResetBtn/ResetBtn';
 
 const initialData = {
   name: '',
@@ -96,8 +97,6 @@ function HomePage() {
         distance: prev[id].distance,
       },
     }));
-
-    console.log(status);
     switch (status) {
       case 200:
         setEnginesStatus((prev) => ({
@@ -121,7 +120,6 @@ function HomePage() {
         break;
 
       default:
-        console.log(status);
         break;
     }
   };
@@ -208,14 +206,14 @@ function HomePage() {
     setIsResetActive(false);
   };
 
-  const handleRecet = async () => {
+  const handleRecet = useCallback(async () => {
     setIsResetActive(true);
     setChampion(null);
     await Promise.all(cars.map((i) => engineSwitcher(i.id!, 'stopped')));
     setHasWinner(false);
     setIsRace(false);
     setIsResetActive(false);
-  };
+  }, [isResetActive]);
 
   const switchPageToHome = () => {
     setIsHome(true);
@@ -237,7 +235,9 @@ function HomePage() {
       id,
       time: +(enginesStatus[id].distance / 1000 / enginesStatus[id].velocity).toFixed(2),
     };
-
+    const champ = cars.find((car) => car.id === winnerData.id);
+    if (champ) setChampion({ name: champ.name, time: winnerData.time });
+    setHasWinner(true);
     const data = await getWinner(id);
 
     if (Object.keys(data).length) {
@@ -251,19 +251,26 @@ function HomePage() {
     } else {
       await createWinner({ ...winnerData, wins: 1 });
     }
-    const champ = cars.find((car) => car.id === winnerData.id);
-    console.log(champ);
-    if (champ) setChampion({ name: champ.name, time: winnerData.time });
+
     getWinnersData();
     getAllCars();
   };
-  Object.keys(enginesStatus).map((id) => {
-    if (enginesStatus[+id].status === 'finished' && !hasWinner && isRace) {
-      getChampion(+id);
-      setHasWinner(true);
-    }
-    return null;
-  });
+
+  useEffect(() => {
+    Object.keys(enginesStatus).map((id) => {
+      if (enginesStatus[+id].status === 'finished' && !hasWinner && isRace) {
+        getChampion(+id);
+      }
+      return null;
+    });
+  }, [enginesStatus]);
+  // Object.keys(enginesStatus).map((id) => {
+  //   if (enginesStatus[+id].status === 'finished' && !hasWinner && isRace) {
+  //     setHasWinner(true);
+  //     getChampion(+id);
+  //   }
+  //   return null;
+  // });
   const handleSort = (e: string) => {
     const sort = e;
     if (sort === 'wins' || sort === 'time') {
@@ -326,9 +333,7 @@ function HomePage() {
           <button className={styles.control_btns} disabled={isSingleDriving()} type="button" onClick={handleRace}>
             race
           </button>
-          <button className={styles.control_btns} disabled={isResetActive} type="button" onClick={handleRecet}>
-            recet
-          </button>
+          <ResetBtn isResetActive={isResetActive} onReset={handleRecet} />
           {cars.length ? (
             <div>
               Garage: {carsLength}
@@ -353,7 +358,7 @@ function HomePage() {
           ) : (
             <h1>OOPS, it`&apos;s empty</h1>
           )}
-          {hasWinner && <MemoWinner data={champion} />}
+          {hasWinner && <MemoWinner data={champion} isResetActive={isResetActive} onReset={handleRecet} />}
         </div>
         <div className={`${styles.winners} ${isHome ? styles.hidden : ''}`}>
           <h2>Winners</h2>
