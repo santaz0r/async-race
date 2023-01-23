@@ -1,6 +1,7 @@
 .winner {
   position: absolute;
-  width: 20vw;
+  width: -moz-max-content;
+  width: -webkit-max-content;
   height: 15vh;
   left: 50%;
   top: 30%;
