@@ -1,0 +1,39 @@
+.footer {
+  flex: 0 0 auto;
+
+  &_content {
+    display: flex;
+    padding: 10px 0;
+    justify-content: space-around;
+    align-items: center;
+  }
+  &_logo {
+    display: inline-block;
+    background-image: url('../../assets/footer/gh.svg');
+    background-repeat: no-repeat;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.1s linear;
+    &:hover {
+      scale: 1.1;
+    }
+  }
+  &_rss_logo {
+    display: inline-block;
+    background-image: url('../../assets/footer/rss.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 100px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.1s linear;
+    &:hover {
+      scale: 1.1;
+    }
+  }
+}
