@@ -178,10 +178,9 @@ function HomePage() {
     setDisabledInput(false);
   };
 
-  const handleDelete = async (id: number) => {
-    await deleteCar(id);
-    await deleteWinner(id);
-
+  const handleDelete = async (carId: number) => {
+    await deleteCar(carId);
+    if (winners.some((i) => i.id === carId)) await deleteWinner(carId);
     getData();
     getWinnersData();
   };
