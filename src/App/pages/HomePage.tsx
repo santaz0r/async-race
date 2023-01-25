@@ -361,8 +361,10 @@ function HomePage() {
         </div>
         <div className={`${styles.winners} ${isHome ? styles.hidden : ''}`}>
           <h2>Winners</h2>
+
           {winners.length ? (
             <>
+              <h3>Total winners {winnersLength}</h3>
               <WinnersTable
                 winners={winners}
                 findOption={findWinnerCar}
