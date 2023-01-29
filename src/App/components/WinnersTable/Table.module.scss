@@ -1,0 +1,14 @@
+.winner_table {
+  width: 80vw;
+  margin: auto;
+  border-collapse: collapse;
+  tr {
+    text-align: center;
+  }
+  th,
+  td {
+    padding: 5px;
+    border: 1px solid black;
+    font-size: 16px;
+  }
+}

@@ -1,0 +1,21 @@
+.control_btns {
+  width: 170px;
+  text-transform: capitalize;
+  height: 30px;
+  margin-right: 10px;
+  transition: all 0.1s linear;
+  font-size: 14px;
+
+  border: 1px solid black;
+  outline: none;
+  border-radius: 5px;
+  &:not([disabled]) {
+    background-color: #fff;
+  }
+  &:not([disabled]):hover {
+    background: greenyellow;
+    color: white;
+    border: solid 1px greenyellow;
+    cursor: pointer;
+  }
+}

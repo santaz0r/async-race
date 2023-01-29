@@ -1,0 +1,94 @@
+@keyframes drive {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(85vw - 75px));
+  }
+}
+
+.car_drive {
+  animation: drive linear;
+  animation-fill-mode: forwards;
+}
+
+.car_broken {
+  animation: drive linear;
+  animation-play-state: paused;
+}
+
+.car_stopped {
+  animation-play-state: unset;
+}
+
+.car {
+  &_item {
+    padding: 10px;
+    border: 1px solid black;
+    margin-bottom: 15px;
+    max-width: 95%;
+  }
+  &_name {
+    margin-bottom: 7px;
+    font-size: 16px;
+  }
+  &_controls {
+    &_btn {
+      width: 100px;
+      outline: none;
+      border: 1px solid;
+      margin-right: 10px;
+      border-radius: 5px;
+      &:not([disabled]) {
+        background-color: #fff;
+      }
+
+      &:not([disabled]):hover {
+        background-color: greenyellow;
+        color: white;
+        border-color: greenyellow;
+        cursor: pointer;
+      }
+    }
+  }
+  &_track {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: inherit;
+    &::before {
+      content: '';
+      border-bottom: 2.5px dashed black;
+      width: 100%;
+      position: absolute;
+      bottom: 18px;
+    }
+  }
+  &_finish {
+    left: calc(85vw - 75px);
+    position: absolute;
+  }
+}
+
+.engine {
+  &_constrols {
+    &_btn {
+      width: 100px;
+      outline: none;
+      border: 1px solid;
+      margin-right: 10px;
+      border-radius: 5px;
+      text-transform: capitalize;
+      &:not([disabled]) {
+        background-color: #fff;
+      }
+
+      &:not([disabled]):hover {
+        background-color: greenyellow;
+        color: white;
+        border-color: greenyellow;
+        cursor: pointer;
+      }
+    }
+  }
+}
