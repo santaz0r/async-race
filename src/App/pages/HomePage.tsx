@@ -7,7 +7,7 @@ import {
   switchCarEngineStatus,
   updateCar,
 } from '../services/carsService';
-import { Constants, TCar, TRespWinner, engineStatus } from '../types/types';
+import { Constants, TCar, TRespWinner, EngineStatus } from '../types/types';
 import CarForm from '../components/CarInput/CarInput';
 import CarsList from '../components/CarsList/CarsList';
 import Pagination from '../components/Pagination/Pagination';
@@ -23,13 +23,12 @@ const initialData = {
   color: '#000000',
 };
 const MemoWinner = memo(WinnerModal);
-
 function HomePage() {
   const [AllCars, setAllCars] = useState<TCar[]>([]);
 
   const [cars, setCars] = useState<TCar[]>([]);
   const [winners, setWinners] = useState<TRespWinner[]>([]);
-  const [enginesStatus, setEnginesStatus] = useState<engineStatus>({});
+  const [enginesStatus, setEnginesStatus] = useState<EngineStatus>({});
 
   const [carsLength, setCarsLength] = useState(Constants.startLength);
   const [winnersLength, setWinnersLength] = useState(Constants.startLength);
@@ -126,7 +125,7 @@ function HomePage() {
 
   const engineSwitcher = async (id: number, status: 'started' | 'stopped') => {
     const engine = await switchCarEngineStatus(id, status);
-    setEnginesStatus((prev) => ({
+    setEnginesStatus((prev: EngineStatus) => ({
       ...prev,
       [id]: {
         status,
@@ -192,11 +191,11 @@ function HomePage() {
     setCurrenWinnerstpage(page);
   };
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     for (let i = 0; i < Constants.limitToGenerate; i += 1) {
-      createNewCar(generateCar());
+      void createNewCar(generateCar());
     }
-    getData();
+    await getData();
   };
   const handleRace = async () => {
     setIsRace(true);
@@ -258,7 +257,7 @@ function HomePage() {
   useEffect(() => {
     Object.keys(enginesStatus).map((id) => {
       if (enginesStatus[+id].status === 'finished' && !hasWinner && isRace) {
-        getChampion(+id);
+        void getChampion(+id);
       }
       return null;
     });

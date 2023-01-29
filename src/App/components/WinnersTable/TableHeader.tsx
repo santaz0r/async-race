@@ -26,7 +26,7 @@ function TableHeader({ columns, onSort, sortOprions }: TProps) {
       }
       return `${styles.sort_btn_desc}`;
     }
-    return null;
+    return '';
   };
 
   return (

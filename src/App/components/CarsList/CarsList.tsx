@@ -1,11 +1,11 @@
-import { TCar, engineStatus } from '../../types/types';
+import { TCar, EngineStatus } from '../../types/types';
 import { ReactComponent as CarLogo } from '../../assets/car-2901.svg';
 import { ReactComponent as FinishFlag } from '../../assets/finish.svg';
 import styles from './CarsList.module.scss';
 
 type TProps = {
   cars: TCar[];
-  enginesData: engineStatus;
+  enginesData: EngineStatus;
   handleClick: (car: TCar) => void;
   onDelete: (id: number) => void;
   onStart: (id: number, status: 'started') => void;
@@ -15,7 +15,7 @@ type TProps = {
 };
 
 function CarsList({ cars, enginesData, handleClick, onDelete, onStart, onStopped, isDriving, isRace }: TProps) {
-  const addClass = (id: number) =>
+  const addClass = (id: number): string =>
     enginesData[id].velocity > 0 && enginesData[id].status !== 'broken'
       ? styles.car_drive
       : enginesData[id].velocity === 0 && enginesData[id].status !== 'broken'
