@@ -7,51 +7,45 @@ enum Responses {
 
 async function getWinners(page: number, sortBy = '', order = '') {
   const res = await fetch(`${Responses.BASE_URL}/winners?&_sort=${sortBy}&_order=${order}&_limit=10&_page=${page}`);
-  const data = await res.json();
+  const data = (await res.json()) as TRespWinner[];
 
   const totalWinners = res.headers.get(Responses.TotalCountHeader)
     ? res.headers.get(Responses.TotalCountHeader)
     : data.length;
-  return { data, totalWinners: +totalWinners };
+  return { data, totalWinners: totalWinners ? +totalWinners : 0 };
 }
 
 async function getWinner(id: number): Promise<TRespWinner> {
   const res = await fetch(`${Responses.BASE_URL}/winners/${id}`);
-  const data = await res.json();
+  const data = (await res.json()) as TRespWinner;
 
   return data;
 }
 
 async function createWinner(winnerData: TRespWinner) {
-  const res = await fetch(`${Responses.BASE_URL}/winners`, {
+  await fetch(`${Responses.BASE_URL}/winners`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(winnerData),
   });
-  const winner = await res.json();
-  return winner;
 }
 
 async function updateWinner(winnerData: TRespWinner) {
-  const res = await fetch(`${Responses.BASE_URL}/winners/${winnerData.id}`, {
+  await fetch(`${Responses.BASE_URL}/winners/${winnerData.id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(winnerData),
   });
-  const winner = await res.json();
-  return winner;
 }
 
 async function deleteWinner(id: TRespWinner['id']) {
-  const res = await fetch(`${Responses.BASE_URL}/winners/${id}`, {
+  await fetch(`${Responses.BASE_URL}/winners/${id}`, {
     method: 'DELETE',
   });
-  const winner = await res.json();
-  return winner;
 }
 
 export { getWinners, getWinner, updateWinner, createWinner, deleteWinner };

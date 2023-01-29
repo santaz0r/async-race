@@ -10,7 +10,7 @@ type TRespWinner = {
   time: number;
 };
 
-type engineStatus = {
+type EngineStatus = {
   [id: number]: {
     status: string;
     velocity: number;
@@ -52,4 +52,4 @@ enum Constants {
   winnersLimit = 10,
 }
 export { CarNames, CarModels, Constants };
-export type { TCar, engineStatus, TRespWinner };
+export type { TCar, EngineStatus, TRespWinner };
